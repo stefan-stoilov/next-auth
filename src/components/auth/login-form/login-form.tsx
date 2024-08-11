@@ -1,25 +1,22 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchemaType } from "@/schemas";
-import { login } from "@/server/actions/login";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { CardWrapper } from "@/components/auth/card-wrapper";
-import { FormError, FormSuccess } from "@/components/auth/form-status";
+import { FormError } from "@/components/auth/form-status";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+import { signIn } from "next-auth/react";
+
 export function LoginForm() {
   const [isPending, startTransition] = useTransition();
-  const [validation, setValidation] = useState<{
-    status: "awaiting" | "error" | "success";
-    message: string;
-  }>({
-    status: "awaiting",
-    message: "",
-  });
+  const params = useSearchParams();
+  const error = params.get("error");
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
@@ -33,20 +30,11 @@ export function LoginForm() {
 
   function onSubmit(data: LoginSchemaType) {
     startTransition(async () => {
-      const res = await login(data);
-
-      if (res.error) {
-        setValidation({
-          status: "error",
-          message: res.error,
-        });
-      }
-      if (res.success) {
-        setValidation({
-          status: "success",
-          message: res.success,
-        });
-      }
+      await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        callbackUrl: "/",
+      });
     });
   }
 
@@ -89,8 +77,8 @@ export function LoginForm() {
             />
           </div>
 
-          {validation.status === "error" && <FormError message={validation.message} />}
-          {validation.status === "success" && <FormSuccess message={validation.message} />}
+          {error && <FormError message={error} />}
+          {/* {validation.status === "success" && <FormSuccess message={validation.message} />} */}
 
           <Button type="submit" className="w-full">
             Login
