@@ -1,14 +1,36 @@
 "use server";
-import { loginSchema, type LoginSchemaType } from "@/schemas";
+import { loginSchema } from "@/schemas";
+// import { db } from "@/server/db";
+import { signIn } from "@/auth";
+import { getUserByEmail } from "@/server/lib/user";
+import { AuthError } from "next-auth";
 
-export async function login(values: LoginSchemaType) {
+export async function login(values: unknown) {
   const validatedFields = loginSchema.safeParse(values);
 
-  if (!validatedFields.success) {
-    console.log(validatedFields.error);
+  if (!validatedFields.success) return { error: "Invalid fields!" };
 
-    return { error: "Invalid fields!" };
+  const { email, password } = validatedFields.data;
+
+  const existingUser = await getUserByEmail(email);
+
+  if (!existingUser || !existingUser.email || !existingUser.password) {
+    return { error: "Invalid credentials!" };
   }
 
-  return { success: "Login successful!" };
+  try {
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: "/",
+    });
+
+    console.log("success");
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return { error: error.type === "CredentialsSignin" ? "Invalid credentials!" : "Something went wrong!" };
+    }
+
+    throw error;
+  }
 }

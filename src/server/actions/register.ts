@@ -1,7 +1,9 @@
 "use server";
+import { db } from "@/server/db";
+import { users } from "@/server/db/schema";
 import { registerSchema, type RegisterSchemaType } from "@/schemas";
 import { getUserByEmail } from "@/server/lib/user";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export async function register(values: RegisterSchemaType) {
   const validatedFields = registerSchema.safeParse(values);
@@ -22,5 +24,11 @@ export async function register(values: RegisterSchemaType) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  return { success: "Register successful!" };
+  await db.insert(users).values({
+    name,
+    email,
+    password: hashedPassword,
+  });
+
+  return { success: "Registered successfully!" };
 }
