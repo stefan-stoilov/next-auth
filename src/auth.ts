@@ -10,10 +10,55 @@ import { env } from "@/env";
 
 import bcrypt from "bcryptjs";
 import { loginSchema } from "@/schemas";
-import { getUserByEmail } from "@/server/lib/user";
+import { getUserByEmail, getUserById } from "@/server/lib/user";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  callbacks: {
+    async signIn({ user }) {
+      if (!user.id) return false;
+
+      const existingUser = await getUserById(user.id);
+
+      if (existingUser) {
+        // Check if user has verified email
+        // if (!existingUser.emailVerified) return false;
+
+        return true;
+      }
+
+      return false;
+    },
+    async jwt({ token }) {
+      if (!token.sub) return token;
+
+      const existingUser = await getUserById(token.sub);
+
+      if (!existingUser) return token;
+
+      token.role = existingUser.role;
+
+      return token;
+    },
+    async session({ token, session }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+      }
+
+      if (token.role && session.user) {
+        session.user.role = token.role;
+      }
+
+      return session;
+    },
+    // async redirect({ baseUrl, url }) {
+    //   // Allows callback URLs on the same origin
+    //   if (new URL(url).origin === baseUrl) return url;
+
+    //   return baseUrl;
+    // },
+  },
   adapter: DrizzleAdapter(db),
+  session: { strategy: "jwt" },
   providers: [
     GitHub({
       clientId: env.AUTH_GITHUB_ID,
@@ -28,24 +73,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           const user = await getUserByEmail(email);
 
-          if (!user?.password) {
+          if (!user || !user.password) {
             // There is either no user with this email,
             // or there is a user with the email using OAuth, therefore missing password in DB.
             // In either case, we should not authorize the user.
             return null;
           }
 
-          const passwordsMatch = await bcrypt.compare(password, user.password);
+          const doPasswordsMatch = await bcrypt.compare(password, user.password);
 
-          if (passwordsMatch) return user;
+          if (doPasswordsMatch) return user;
         }
 
         return null;
       },
     }),
   ],
-  pages: {
-    signIn: "/sign-in",
-    signOut: "/",
-  },
+  // pages: {
+  //   signIn: "/sign-in",
+  //   signOut: "/",
+  // },
 });

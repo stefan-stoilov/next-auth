@@ -10,7 +10,7 @@ export function Social() {
 
   function onProviderSignIn(provider: "github" | "google") {
     startTransition(async () => {
-      await signIn(provider, { callbackUrl: "/" });
+      await signIn(provider);
     });
   }
 

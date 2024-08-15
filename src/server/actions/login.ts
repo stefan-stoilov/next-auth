@@ -4,6 +4,7 @@ import { loginSchema } from "@/schemas";
 import { signIn } from "@/auth";
 import { getUserByEmail } from "@/server/lib/user";
 import { AuthError } from "next-auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export async function login(values: unknown) {
   const validatedFields = loginSchema.safeParse(values);
@@ -22,10 +23,8 @@ export async function login(values: unknown) {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/",
+      // redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
-
-    console.log("success");
   } catch (error) {
     if (error instanceof AuthError) {
       return { error: error.type === "CredentialsSignin" ? "Invalid credentials!" : "Something went wrong!" };

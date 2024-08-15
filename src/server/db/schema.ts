@@ -12,6 +12,10 @@ export const users = pgTable("user", {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   password: text("password"),
   image: text("image"),
+  role: text("role")
+    .notNull()
+    .$type<"admin" | "user">()
+    .$defaultFn(() => "user"),
 });
 
 export const accounts = pgTable(

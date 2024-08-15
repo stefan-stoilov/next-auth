@@ -23,7 +23,7 @@ const config = {
       },
     ],
     "@typescript-eslint/no-unused-vars": [
-      "warn",
+      "off",
       {
         argsIgnorePattern: "^_",
       },
