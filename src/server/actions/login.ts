@@ -1,12 +1,12 @@
 "use server";
-import { loginSchema } from "@/schemas";
+import { loginSchema, LoginSchemaType } from "@/schemas";
 // import { db } from "@/server/db";
 import { signIn } from "@/auth";
-import { getUserByEmail } from "@/server/lib/user";
+import { getUserByEmail, sendVerificationEmail, generateToken } from "@/server/lib";
 import { AuthError } from "next-auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
-export async function login(values: unknown) {
+export async function login(values: LoginSchemaType) {
   const validatedFields = loginSchema.safeParse(values);
 
   if (!validatedFields.success) return { error: "Invalid fields!" };
@@ -17,6 +17,16 @@ export async function login(values: unknown) {
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
     return { error: "Invalid credentials!" };
+  }
+
+  if (!existingUser.emailVerified) {
+    const verificationToken = await generateToken(existingUser.email);
+
+    if (!verificationToken) return { error: "Something went wrong!" };
+
+    const error = await sendVerificationEmail(existingUser.email, verificationToken.token);
+
+    return error ? { error: error.message } : { success: "Confirmation email sent!" };
   }
 
   try {

@@ -6,28 +6,35 @@ import Credentials from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import { db } from "@/server/db";
+import { users } from "@/server/db/schema";
+
 import { env } from "@/env";
 
 import bcrypt from "bcryptjs";
 import { loginSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/server/lib/user";
+import { eq } from "drizzle-orm";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
-    async signIn({ user }) {
+    /**
+     * @see https://next-auth.js.org/configuration/callbacks#sign-in-callback
+     */
+    async signIn({ user, account }) {
       if (!user.id) return false;
+
+      if (account?.provider !== "credentials") return true; // Allow OAuth without email verification
 
       const existingUser = await getUserById(user.id);
 
-      if (existingUser) {
-        // Check if user has verified email
-        // if (!existingUser.emailVerified) return false;
+      // Prevent sign in without email verification
+      if (!existingUser?.emailVerified) return false;
 
-        return true;
-      }
-
-      return false;
+      return true;
     },
+    /**
+     * @see https://next-auth.js.org/configuration/callbacks#jwt-callback
+     */
     async jwt({ token }) {
       if (!token.sub) return token;
 
@@ -35,10 +42,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (!existingUser) return token;
 
-      token.role = existingUser.role;
+      token.role = existingUser.role ? existingUser.role : undefined;
 
       return token;
     },
+    /**
+     * @see https://next-auth.js.org/configuration/callbacks#session-callback
+     */
     async session({ token, session }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
@@ -56,6 +66,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     //   return baseUrl;
     // },
+  },
+  events: {
+    /**
+     * @see https://next-auth.js.org/configuration/events#linkaccount
+     */
+    async linkAccount({ user }) {
+      const { id } = user;
+
+      if (id) {
+        await db.update(users).set({ emailVerified: new Date() }).where(eq(users.id, id));
+      }
+    },
   },
   adapter: DrizzleAdapter(db),
   session: { strategy: "jwt" },
@@ -89,8 +111,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  // pages: {
-  //   signIn: "/sign-in",
-  //   signOut: "/",
-  // },
+  /**
+   * @see https://next-auth.js.org/configuration/options#pages
+   */
+  pages: {
+    signIn: "/sign-in",
+    error: "/auth-error",
+  },
 });

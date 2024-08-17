@@ -1,5 +1,6 @@
 "use client";
 import { useState, useTransition } from "react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchemaType } from "@/schemas";
@@ -20,6 +21,10 @@ export function LoginForm() {
     status: "awaiting",
     message: "",
   });
+
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked" ? "Email already in use with another provider!" : "";
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
@@ -45,7 +50,7 @@ export function LoginForm() {
           form.reset();
           setValidation({
             status: "success",
-            message: "Successful login!",
+            message: res?.success ? res.success : "Success",
           });
         }
       } catch (error) {
@@ -93,8 +98,8 @@ export function LoginForm() {
             />
           </div>
 
-          {validation.status === "error" && <FormError message={validation.message} />}
-          {validation.status === "success" && <FormSuccess message={validation.message} />}
+          {validation.status === "error" || (urlError && <FormError message={validation.message || urlError} />)}
+          {validation.status === "success" && !urlError && <FormSuccess message={validation.message} />}
 
           <Button type="submit" className="w-full">
             Login

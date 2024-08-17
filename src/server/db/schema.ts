@@ -12,10 +12,7 @@ export const users = pgTable("user", {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   password: text("password"),
   image: text("image"),
-  role: text("role")
-    .notNull()
-    .$type<"admin" | "user">()
-    .$defaultFn(() => "user"),
+  role: text("role").default("user").$type<"admin" | "user">(),
 });
 
 export const accounts = pgTable(
@@ -50,19 +47,15 @@ export const sessions = pgTable("session", {
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
-export const verificationTokens = pgTable(
-  "verificationToken",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  verificationToken => ({
-    compositePk: primaryKey({
-      columns: [verificationToken.identifier, verificationToken.token],
-    }),
-  }),
-);
+export const verificationTokens = pgTable("verificationToken", {
+  id: text("id")
+    .primaryKey()
+    .$type<string>()
+    .$defaultFn(() => crypto.randomUUID()),
+  token: text("token").notNull().unique(),
+  email: text("email").notNull().unique(),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+});
 
 export const authenticators = pgTable(
   "authenticator",
