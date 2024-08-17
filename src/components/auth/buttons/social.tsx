@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 export function Social() {
   const [isPending, startTransition] = useTransition();
 
-  function onProviderSignIn(provider: "github" | "google") {
+  function onProviderSignIn(provider: "github") {
     startTransition(async () => {
-      await signIn(provider, { callbackUrl: "/" });
+      await signIn(provider);
     });
   }
 

@@ -1,14 +1,14 @@
 "use server";
+import { db } from "@/server/db";
+import { users } from "@/server/db/schema";
 import { registerSchema, type RegisterSchemaType } from "@/schemas";
-import { getUserByEmail } from "@/server/lib/user";
-import bcrypt from "bcrypt";
+import { getUserByEmail, generateToken, sendVerificationEmail } from "@/server/lib";
+import bcrypt from "bcryptjs";
 
 export async function register(values: RegisterSchemaType) {
   const validatedFields = registerSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    console.log(validatedFields.error);
-
     return { error: "Invalid fields!" };
   }
 
@@ -22,5 +22,19 @@ export async function register(values: RegisterSchemaType) {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  return { success: "Register successful!" };
+  await db.insert(users).values({
+    name,
+    email,
+    password: hashedPassword,
+    role: "user",
+  });
+
+  const verificationToken = await generateToken(email);
+  if (!verificationToken) {
+    return { error: "Error generating verification token!" };
+  }
+
+  await sendVerificationEmail(email, verificationToken.token);
+
+  return { success: "Confirmation email sent!" };
 }
