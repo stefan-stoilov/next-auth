@@ -1,8 +1,8 @@
 "use server";
-import { loginSchema, LoginSchemaType } from "@/schemas";
+import { loginSchema, type LoginSchemaType } from "@/schemas";
 // import { db } from "@/server/db";
 import { signIn } from "@/auth";
-import { getUserByEmail, sendVerificationEmail, generateToken } from "@/server/lib";
+import { getUserByEmail, sendVerificationEmail, generateVerificationToken } from "@/server/lib";
 import { AuthError } from "next-auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
@@ -20,7 +20,7 @@ export async function login(values: LoginSchemaType) {
   }
 
   if (!existingUser.emailVerified) {
-    const verificationToken = await generateToken(existingUser.email);
+    const verificationToken = await generateVerificationToken(existingUser.email);
 
     if (!verificationToken) return { error: "Something went wrong!" };
 
