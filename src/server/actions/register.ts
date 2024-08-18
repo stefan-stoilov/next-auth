@@ -2,7 +2,7 @@
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { registerSchema, type RegisterSchemaType } from "@/schemas";
-import { getUserByEmail, generateToken, sendVerificationEmail } from "@/server/lib";
+import { getUserByEmail, generateVerificationToken, sendVerificationEmail } from "@/server/lib";
 import bcrypt from "bcryptjs";
 
 export async function register(values: RegisterSchemaType) {
@@ -29,7 +29,7 @@ export async function register(values: RegisterSchemaType) {
     role: "user",
   });
 
-  const verificationToken = await generateToken(email);
+  const verificationToken = await generateVerificationToken(email);
   if (!verificationToken) {
     return { error: "Error generating verification token!" };
   }
