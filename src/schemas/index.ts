@@ -8,13 +8,16 @@ export const loginSchema = z.object({
 export type LoginSchemaType = z.infer<typeof loginSchema>;
 
 export const registerSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().max(255, { message: "Email must be less than 255 characters." }),
   password: z.string().min(8, {
     message: "Password must be at least 8 characters long",
   }),
-  name: z.string().min(1, {
-    message: "Name is required",
-  }),
+  name: z
+    .string()
+    .min(1, {
+      message: "Name is required",
+    })
+    .max(255, { message: "Name must be less than 255 characters." }),
 });
 
 export type RegisterSchemaType = z.infer<typeof registerSchema>;

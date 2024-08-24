@@ -1,18 +1,18 @@
 // Drizzle ORM Adapter - https://authjs.dev/getting-started/adapters/drizzle
 
-import { boolean, timestamp, pgTable, text, primaryKey, integer } from "drizzle-orm/pg-core";
+import { boolean, timestamp, pgTable, text, primaryKey, integer, varchar, uuid, pgEnum } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
+export const userRole = pgEnum("userRole", ["admin", "user"]);
+
 export const users = pgTable("user", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: text("name"),
-  email: text("email").unique(),
+  email: varchar("email", { length: 255 }).unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   password: text("password"),
   image: text("image"),
-  role: text("role").default("user").$type<"admin" | "user">(),
+  role: userRole("role").default("user"),
 });
 
 export const accounts = pgTable(
@@ -48,22 +48,16 @@ export const sessions = pgTable("session", {
 });
 
 export const verificationTokens = pgTable("verificationToken", {
-  id: text("id")
-    .primaryKey()
-    .$type<string>()
-    .$defaultFn(() => crypto.randomUUID()),
+  id: uuid("id").defaultRandom().primaryKey(),
   token: text("token").notNull().unique(),
-  email: text("email").notNull().unique(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
 export const passwordResetTokens = pgTable("passwordResetToken", {
-  id: text("id")
-    .primaryKey()
-    .$type<string>()
-    .$defaultFn(() => crypto.randomUUID()),
+  id: uuid("id").defaultRandom().primaryKey(),
   token: text("token").notNull().unique(),
-  email: text("email").notNull().unique(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 

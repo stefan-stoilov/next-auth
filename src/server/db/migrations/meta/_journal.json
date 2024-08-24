@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1723369859355,
-      "tag": "0000_many_blink",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1723373124360,
-      "tag": "0001_equal_mystique",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1723373433785,
-      "tag": "0002_tricky_trauma",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1723729574664,
-      "tag": "0003_lumpy_iron_lad",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1723743388133,
-      "tag": "0004_harsh_nomad",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1723745928450,
-      "tag": "0005_glorious_mach_iv",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1723980447124,
-      "tag": "0006_romantic_susan_delgado",
+      "when": 1724493637233,
+      "tag": "0000_soft_triton",
       "breakpoints": true
     }
   ]
