@@ -1,5 +1,6 @@
 // Drizzle ORM Adapter - https://authjs.dev/getting-started/adapters/drizzle
 
+import { relations } from "drizzle-orm";
 import { boolean, timestamp, pgTable, text, primaryKey, integer, varchar, uuid, pgEnum } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -13,7 +14,15 @@ export const users = pgTable("user", {
   password: text("password"),
   image: text("image"),
   role: userRole("role").default("user"),
+  isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false).notNull(),
 });
+
+export const userRelations = relations(users, ({ one }) => ({
+  twoFactorConfirmation: one(twoFactorConfirmation, {
+    fields: [users.id],
+    references: [twoFactorConfirmation.userId],
+  }),
+}));
 
 export const accounts = pgTable(
   "account",
@@ -59,6 +68,20 @@ export const passwordResetTokens = pgTable("passwordResetToken", {
   token: text("token").notNull().unique(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   expires: timestamp("expires", { mode: "date" }).notNull(),
+});
+
+export const twoFactorTokens = pgTable("twoFactorToken", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  token: text("token").notNull().unique(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+});
+
+export const twoFactorConfirmation = pgTable("twoFactorConfirmation", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
 });
 
 export const authenticators = pgTable(

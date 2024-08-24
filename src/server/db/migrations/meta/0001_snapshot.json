@@ -1,6 +1,6 @@
 {
-  "id": "42be4d55-0575-41a6-ac76-67fa7088b3e9",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "67845fb4-0c43-4686-a959-eebca0011acc",
+  "prevId": "42be4d55-0575-41a6-ac76-67fa7088b3e9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -424,6 +424,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'user'"
+        },
+        "testBoolean": {
+          "name": "testBoolean",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},

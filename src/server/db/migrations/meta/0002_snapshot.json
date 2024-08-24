@@ -1,6 +1,6 @@
 {
-  "id": "42be4d55-0575-41a6-ac76-67fa7088b3e9",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "e5e6384b-5ad0-4f62-bfa5-6a469629bd6c",
+  "prevId": "67845fb4-0c43-4686-a959-eebca0011acc",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -298,13 +298,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "isTwoFactorEnabled": {
-          "name": "isTwoFactorEnabled",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
         }
       },
       "indexes": {},
@@ -424,6 +417,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'user'"
+        },
+        "isTwoFactorEnabled": {
+          "name": "isTwoFactorEnabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},
