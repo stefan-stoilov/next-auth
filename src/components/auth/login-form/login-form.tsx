@@ -139,7 +139,8 @@ export function LoginForm() {
             )}
           </div>
 
-          {validation.status === "error" || (urlError && <FormError message={validation.message || urlError} />)}
+          {validation.status === "error" && <FormError message={validation.message} />}
+          {urlError && <FormError message={urlError} />}
           {validation.status === "success" && !urlError && <FormSuccess message={validation.message} />}
 
           <Button disabled={isPending} type="submit" className="w-full">
