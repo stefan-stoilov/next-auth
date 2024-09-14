@@ -48,7 +48,7 @@ export async function generatePasswordResetToken(email: string) {
 }
 
 export async function generateTwoFactorToken(email: string) {
-  const token = crypto.randomUUID();
+  const token = Math.floor(100000 + Math.random() * 900000).toString();
   const expires = new Date(new Date().getTime() + 3600 * 1000); // expires in 1h
 
   const existingToken = await getTwoFactorTokenByEmail(email);

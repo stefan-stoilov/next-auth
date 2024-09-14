@@ -6,13 +6,13 @@ import Credentials from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { users, twoFactorConfirmation } from "@/server/db/schema";
 
 import { env } from "@/env";
 
 import bcrypt from "bcryptjs";
 import { loginSchema } from "@/schemas";
-import { getUserByEmail, getUserById } from "@/server/lib/user";
+import { getUserByEmail, getUserById, getTwoFactorConfirmationByUserId } from "@/server/lib";
 import { eq } from "drizzle-orm";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -29,6 +29,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       // Prevent sign in without email verification
       if (!existingUser?.emailVerified) return false;
+
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConf = await getTwoFactorConfirmationByUserId(existingUser.id);
+
+        console.log({ twoFAconf: twoFactorConf });
+
+        if (!twoFactorConf) return false;
+
+        await db.delete(twoFactorConfirmation).where(eq(twoFactorConfirmation.userId, existingUser.id));
+      }
 
       return true;
     },
