@@ -1,7 +1,7 @@
 import { db } from "@/server/db";
 import { eq } from "drizzle-orm";
-import { verificationTokens, passwordResetTokens } from "@/server/db/schema";
-import { getVerificationTokenByEmail, getPasswordResetTokenByEmail } from "@/server/lib";
+import { verificationTokens, passwordResetTokens, twoFactorTokens } from "@/server/db/schema";
+import { getVerificationTokenByEmail, getPasswordResetTokenByEmail, getTwoFactorTokenByEmail } from "@/server/lib";
 
 export async function generateVerificationToken(email: string) {
   const token = crypto.randomUUID();
@@ -45,4 +45,26 @@ export async function generatePasswordResetToken(email: string) {
     .returning({ token: passwordResetTokens.token });
 
   return passwordResetToken[0];
+}
+
+export async function generateTwoFactorToken(email: string) {
+  const token = crypto.randomUUID();
+  const expires = new Date(new Date().getTime() + 3600 * 1000); // expires in 1h
+
+  const existingToken = await getTwoFactorTokenByEmail(email);
+
+  if (existingToken) {
+    await db.delete(twoFactorTokens).where(eq(twoFactorTokens.id, existingToken.id));
+  }
+
+  const twoFactorToken = await db
+    .insert(twoFactorTokens)
+    .values({
+      token,
+      email,
+      expires,
+    })
+    .returning({ token: twoFactorTokens.token });
+
+  return twoFactorToken[0];
 }
