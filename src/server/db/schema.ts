@@ -7,7 +7,9 @@ import type { AdapterAccountType } from "next-auth/adapters";
 export const userRole = pgEnum("userRole", ["admin", "user"]);
 
 export const users = pgTable("user", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: text("id")
+    .$defaultFn(() => crypto.randomUUID())
+    .primaryKey(),
   name: text("name"),
   email: varchar("email", { length: 255 }).unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
@@ -57,28 +59,36 @@ export const sessions = pgTable("session", {
 });
 
 export const verificationTokens = pgTable("verificationToken", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: text("id")
+    .$defaultFn(() => crypto.randomUUID())
+    .primaryKey(),
   token: text("token").notNull().unique(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
 export const passwordResetTokens = pgTable("passwordResetToken", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: text("id")
+    .$defaultFn(() => crypto.randomUUID())
+    .primaryKey(),
   token: text("token").notNull().unique(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
 export const twoFactorTokens = pgTable("twoFactorToken", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: text("id")
+    .$defaultFn(() => crypto.randomUUID())
+    .primaryKey(),
   token: text("token").notNull().unique(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
 export const twoFactorConfirmation = pgTable("twoFactorConfirmation", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: text("id")
+    .$defaultFn(() => crypto.randomUUID())
+    .primaryKey(),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
