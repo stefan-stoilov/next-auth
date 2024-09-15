@@ -49,7 +49,7 @@ export function VerificationForm() {
           message: "Something went wrong.",
         });
       });
-  }, [token]);
+  }, [token, router]);
 
   useEffect(() => {
     onSubmit();

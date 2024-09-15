@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 interface UserProps {
-  user?: Session["user"];
+  user: Session["user"];
   label: string;
 }
 
@@ -16,29 +16,29 @@ export const User = ({ user, label }: UserProps) => {
       <CardContent className="space-y-4">
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
           <p className="text-sm font-medium">ID</p>
-          <p className="max-w-[180px] truncate rounded-md bg-background p-1 font-mono text-xs">{user?.id}</p>
+          <p className="max-w-[180px] truncate rounded-md bg-background p-1 font-mono text-xs">{user.id}</p>
         </div>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
           <p className="text-sm font-medium">Name</p>
-          <p className="max-w-[180px] truncate rounded-md bg-background p-1 font-mono text-xs">{user?.name}</p>
+          <p className="max-w-[180px] truncate rounded-md bg-background p-1 font-mono text-xs">{user.name}</p>
         </div>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
           <p className="text-sm font-medium">Email</p>
-          <p className="max-w-[180px] truncate rounded-md bg-background p-1 font-mono text-xs">
-            {user?.email ?? "Signed In using oAuth"}
-          </p>
+          <p className="max-w-[180px] truncate rounded-md bg-background p-1 font-mono text-xs">{user.email}</p>
         </div>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
           <p className="text-sm font-medium">Role</p>
-          <p className="max-w-[180px] truncate rounded-md bg-background p-1 font-mono text-xs">{user?.role}</p>
+          <p className="max-w-[180px] truncate rounded-md bg-background p-1 font-mono text-xs">{user.role}</p>
         </div>
 
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-          <p className="text-sm font-medium">Two Factor Authentication</p>
-          <Badge variant={user?.isTwoFactorEnabled ? "default" : "destructive"}>
-            {user?.isTwoFactorEnabled ? "ON" : "OFF"}
-          </Badge>
-        </div>
+        {!user.isOAuth && (
+          <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+            <p className="text-sm font-medium">Two Factor Authentication</p>
+            <Badge variant={user?.isTwoFactorEnabled ? "default" : "destructive"}>
+              {user?.isTwoFactorEnabled ? "ON" : "OFF"}
+            </Badge>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

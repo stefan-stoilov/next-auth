@@ -5,6 +5,8 @@
 @layer base {
   :root {
     --gradient: linear-gradient(to top left, #72c6ef, #004e8f);
+    --home-gradient: linear-gradient(137deg, rgba(7, 14, 21, 1) 21%, rgba(0, 78, 143, 1) 100%);
+    --text-gradient: linear-gradient(to bottom right, #72c6ef 25%, #004e8f 100%);
 
     --background: 212 52% 5.52%;
     --foreground: 212 8% 98.45%;
@@ -45,6 +47,16 @@
 
   .bg-gradient {
     background: var(--gradient);
+  }
+
+  .bg-home-gradient {
+    background: var(--home-gradient);
+  }
+
+  .text-gradient {
+    background: var(--text-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 

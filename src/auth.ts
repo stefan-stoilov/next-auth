@@ -12,7 +12,7 @@ import { env } from "@/env";
 
 import bcrypt from "bcryptjs";
 import { loginSchema } from "@/schemas";
-import { getUserByEmail, getUserById, getTwoFactorConfirmationByUserId } from "@/server/lib";
+import { getUserByEmail, getUserById, getTwoFactorConfirmationByUserId, getAccountById } from "@/server/lib";
 import { eq } from "drizzle-orm";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -33,8 +33,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConf = await getTwoFactorConfirmationByUserId(existingUser.id);
 
-        console.log({ twoFAconf: twoFactorConf });
-
         if (!twoFactorConf) return false;
 
         await db.delete(twoFactorConfirmation).where(eq(twoFactorConfirmation.userId, existingUser.id));
@@ -52,7 +50,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (!existingUser) return token;
 
+      const existingAccount = await getAccountById(existingUser.id);
+
+      token.isOAuth = existingAccount ? true : false;
       token.role = existingUser.role ? existingUser.role : undefined;
+      token.name = existingUser.name;
+      token.email = existingUser.email;
 
       return token;
     },
@@ -66,16 +69,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (token.role && session.user) {
         session.user.role = token.role;
+        session.user.name = token.name;
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled;
+        session.user.isOAuth = token.isOAuth;
+      }
+
+      if (token.email && session.user.email) {
+        session.user.email = token.email;
       }
 
       return session;
     },
-    // async redirect({ baseUrl, url }) {
-    //   // Allows callback URLs on the same origin
-    //   if (new URL(url).origin === baseUrl) return url;
-
-    //   return baseUrl;
-    // },
   },
   events: {
     /**

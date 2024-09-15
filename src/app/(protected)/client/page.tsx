@@ -4,7 +4,7 @@ import { useUserSession } from "@/hooks";
 
 function Page() {
   const user = useUserSession();
-  return <User user={user} label="Client Component Data Access" />;
+  return user ? <User user={user} label="Client Component Data Access" /> : null;
 }
 
 export default Page;
