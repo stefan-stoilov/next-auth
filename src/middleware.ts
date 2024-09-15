@@ -19,14 +19,16 @@ export default auth(req => {
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL("/sign-in", nextUrl));
+    let callbackUrl = nextUrl.pathname;
+    if (nextUrl.search) {
+      callbackUrl += nextUrl.search;
+    }
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+    return Response.redirect(new URL(`/sign-in?${encodedCallbackUrl}`, nextUrl));
   }
 
   return;
-  // if (!req.auth && req.nextUrl.pathname === "/protected") {
-  //   const newUrl = new URL("/sign-in", req.nextUrl.origin);
-  //   return Response.redirect(newUrl);
-  // }
 });
 
 /**

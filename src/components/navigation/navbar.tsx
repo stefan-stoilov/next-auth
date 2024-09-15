@@ -6,8 +6,13 @@ import Link from "next/link";
 export async function Navbar() {
   const session = await auth();
   return (
-    <nav className="fixed left-0 right-0 top-0 flex h-16 w-full items-center justify-between bg-background px-8">
-      <p className="text-foreground">Navbar</p>
+    <nav className="fixed left-0 right-0 top-0 flex h-16 w-full items-center justify-between bg-background px-4 md:px-8">
+      <Link
+        href="/"
+        className="text-gradient flex h-full items-center text-center text-xl font-semibold text-foreground"
+      >
+        Next Auth App
+      </Link>
       {session?.user ? (
         <div className="flex h-full items-center gap-4">
           <p className="text-foreground">{session?.user && <span>Welcome back {session.user.name}</span>}</p>

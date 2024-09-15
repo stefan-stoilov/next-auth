@@ -13,7 +13,7 @@ export type CardWrapperProps = {
 
 export function CardWrapper({ children, headerLabel, showSocial, backButtonHref, backButtonLabel }: CardWrapperProps) {
   return (
-    <Card className="w-[25rem] shadow-md">
+    <Card className="w-[25rem] rounded bg-background shadow-md">
       <CardHeader>
         <Header label={headerLabel} />
       </CardHeader>

@@ -8,12 +8,14 @@ import type { JWT } from "next-auth/jwt";
 declare module "next-auth" {
   interface Session {
     id: string;
-    user: { role: "admin" | "user" } & DefaultSession["user"];
+    user: { role: "admin" | "user"; isTwoFactorEnabled: boolean; isOAuth: boolean } & DefaultSession["user"];
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     role?: "admin" | "user";
+    isTwoFactorEnabled: boolean;
+    isOAuth: boolean;
   }
 }

@@ -16,7 +16,7 @@ import {
 import { AuthError } from "next-auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
-export async function login(values: LoginSchemaType) {
+export async function login(values: LoginSchemaType, callbackUrl?: string | null) {
   const validatedFields = loginSchema.safeParse(values);
 
   if (!validatedFields.success) return { error: "Invalid fields!" };
@@ -71,7 +71,7 @@ export async function login(values: LoginSchemaType) {
     await signIn("credentials", {
       email,
       password,
-      // redirectTo: DEFAULT_LOGIN_REDIRECT,
+      redirectTo: callbackUrl ?? DEFAULT_LOGIN_REDIRECT,
     });
   } catch (error) {
     if (error instanceof AuthError) {
