@@ -1,121 +1,76 @@
 import { Navbar } from "@/components/navigation";
 import Link from "next/link";
+import { data } from "./data";
 
 export default async function HomePage() {
   return (
     <main className="bg-home-gradient flex min-h-screen flex-col items-center justify-center text-white">
       <Navbar />
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-20">
-        <h1 className="text-gradient text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          Next Auth App
-        </h1>
+      <div className="container flex flex-col items-center justify-center gap-20 px-5 pb-20 md:gap-12 md:pt-40">
+        <div className="flex h-screen flex-col items-center justify-center gap-4 md:h-fit md:gap-12">
+          <h1 className="text-gradient text-center text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+            Next Auth App
+          </h1>
 
-        <h2 className="max-w-[800px] text-center text-xl text-foreground md:text-3xl">
-          {
-            "Next.js authentication made simple, type safe and fully customizable. Built with the best technologies that React's ecosystem has to offer."
-          }
-        </h2>
+          <h2 className="text-center text-2xl md:text-4xl">Under development. Run locally to test functionality.</h2>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8">
-          <h3 className="text-center text-2xl font-semibold text-foreground md:col-span-2">
+          <h2 className="max-w-[800px] text-center text-xl text-foreground md:text-3xl">
+            {
+              "Next.js authentication made simple, type safe and fully customizable. Built with the best technologies that React's ecosystem has to offer."
+            }
+          </h2>
+        </div>
+
+        <div className="my-4 flex w-full max-w-[1024px] flex-col gap-4 text-sm md:my-8 md:h-fit md:w-4/5 md:gap-8 md:text-center md:text-lg">
+          <h3 className="text-center text-xl font-semibold text-foreground md:col-span-2 md:text-3xl">
+            About this app
+          </h3>
+          {data.description.map((paragraph, index) => (
+            <p key={index} className="text-foreground/90">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+
+        <div>
+          <h3 className="mb-6 text-center text-xl font-semibold text-foreground md:col-span-2 md:text-3xl">
             Started with Create <span className="text-gradient font-bold">T3</span> App
           </h3>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h4 className="text-2xl font-bold">First Steps →</h4>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h4 className="text-2xl font-bold">Documentation →</h4>
-            <div className="text-lg">Learn more about Create T3 App, the libraries it uses, and how to deploy it.</div>
-          </Link>
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8">
+            {data.t3.map(({ link, title, description }, i) => (
+              <li key={i} className="flex w-full md:aspect-[16/12] md:max-w-xs">
+                <Link
+                  className="flex w-full flex-col gap-2 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20 md:gap-4"
+                  href={link}
+                  target="_blank"
+                >
+                  <h4 className="text-lg font-bold md:text-2xl">{title}</h4>
+                  <p className="text-sm md:text-lg">{description}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-          <h3 className="text-center text-2xl font-semibold text-foreground md:col-span-2">Tech Stack</h3>
+        <div>
+          <h3 className="mb-6 text-center text-3xl font-semibold text-foreground md:col-span-2 lg:col-span-3">
+            Tech Stack Used
+          </h3>
 
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://nextjs.org/"
-            target="_blank"
-          >
-            <h4 className="text-2xl font-bold">Next.js</h4>
-            <div className="text-lg">
-              The React Framework for the Web. Utilizing React server component architecture.
-            </div>
-          </Link>
-
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://www.typescriptlang.org/"
-            target="_blank"
-          >
-            <h4 className="text-2xl font-bold">TypeScript</h4>
-            <div className="text-lg">
-              Because type safety is crucial for building scalable and maintainable applications.
-            </div>
-          </Link>
-
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://next-auth.js.org/"
-            target="_blank"
-          >
-            <h4 className="text-2xl font-bold">NextAuth.js</h4>
-            <div className="text-lg">
-              Simplifying the implementation of secure authentication flows in React-based web applications.
-            </div>
-          </Link>
-
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://orm.drizzle.team/"
-            target="_blank"
-          >
-            <h4 className="text-2xl font-bold">Drizzle ORM</h4>
-            <div className="text-lg">
-              A lightweight, type-safe object-relational mapper for TypeScript and SQL databases.
-            </div>
-          </Link>
-
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://neon.tech/home"
-            target="_blank"
-          >
-            <h4 className="text-2xl font-bold">Neon Postgres</h4>
-            <div className="text-lg">
-              Postgres databse, on a serverless platform designed to build reliable and scalable applications faster.
-            </div>
-          </Link>
-
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://tailwindcss.com/"
-            target="_blank"
-          >
-            <h4 className="text-2xl font-bold">Tailwind CSS</h4>
-            <div className="text-lg">Fast, flexible, and reliable styling solution.</div>
-          </Link>
-
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h4 className="text-2xl font-bold">Shadcn/ui</h4>
-            <div className="text-lg">
-              UI components designed to accelerate development while maintaining flexibility and consistency across
-              projects.
-            </div>
-          </Link>
+          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+            {data.stack.map(({ link, title, description }, i) => (
+              <li key={i} className="flex w-full md:aspect-[16/12] md:max-w-xs">
+                <Link
+                  className="flex w-full flex-col gap-2 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20 md:gap-4"
+                  href={link}
+                  target="_blank"
+                >
+                  <h4 className="text-lg font-bold md:text-2xl">{title}</h4>
+                  <p className="text-sm md:text-lg">{description}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </main>

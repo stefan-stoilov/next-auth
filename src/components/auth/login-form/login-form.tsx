@@ -28,6 +28,7 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked" ? "Email already in use with another provider!" : "";
+  const callbackUrl = searchParams.get("callbackUrl");
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
@@ -42,7 +43,7 @@ export function LoginForm() {
   function onSubmit(data: LoginSchemaType) {
     startTransition(async () => {
       try {
-        const res = await login(data);
+        const res = await login(data, callbackUrl);
 
         if (res?.error) {
           setValidation({
@@ -123,12 +124,11 @@ export function LoginForm() {
                     <FormControl>
                       <InputOTP maxLength={6} pushPasswordManagerStrategy="none" {...field}>
                         <InputOTPGroup>
-                          <InputOTPSlot index={0} />
-                          <InputOTPSlot index={1} />
-                          <InputOTPSlot index={2} />
-                          <InputOTPSlot index={3} />
-                          <InputOTPSlot index={4} />
-                          <InputOTPSlot index={5} />
+                          {Array.from({ length: 6 })
+                            .fill(() => null)
+                            .map((_, i) => (
+                              <InputOTPSlot key={i} index={i} />
+                            ))}
                         </InputOTPGroup>
                       </InputOTP>
                     </FormControl>

@@ -22,4 +22,4 @@ export const apiAuthPrefix = "/api/auth";
 /**
  * The default redirect path after successful login.
  */
-export const DEFAULT_LOGIN_REDIRECT = "/server";
+export const DEFAULT_LOGIN_REDIRECT = "/settings";
