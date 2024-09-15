@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/navbar";
+import { Navbar } from "@/components/navigation";
 import Link from "next/link";
 
 export default async function HomePage() {
