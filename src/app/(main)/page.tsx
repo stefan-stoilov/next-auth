@@ -12,13 +12,17 @@ export default async function HomePage() {
             Next Auth App
           </h1>
 
-          <h2 className="text-center text-2xl md:text-4xl">Under development. Run locally to test functionality.</h2>
-
           <h2 className="max-w-[800px] text-center text-xl text-foreground md:text-3xl">
             {
               "Next.js authentication made simple, type safe and fully customizable. Built with the best technologies that React's ecosystem has to offer."
             }
           </h2>
+
+          <p className="text-l max-w-[800px] text-center text-foreground md:text-2xl">
+            <Link href="https://github.com/stefan-stoilov/next-auth" target="_blank" className="underline">
+              Run this project locally.
+            </Link>
+          </p>
         </div>
 
         <div className="my-4 flex w-full max-w-[1024px] flex-col gap-4 text-sm md:my-8 md:h-fit md:w-4/5 md:gap-8 md:text-center md:text-lg">
