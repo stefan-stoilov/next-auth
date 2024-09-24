@@ -5,7 +5,6 @@ import { FormSuccess } from "@/components/auth/form-status";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
 
 function Page() {
   const checkPermissions = async () => {
@@ -33,7 +32,6 @@ function Page() {
           </div>
         </CardContent>
       </Card>
-      <Toaster />
     </>
   );
 }

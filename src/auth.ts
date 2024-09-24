@@ -2,6 +2,7 @@
 
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
@@ -99,6 +100,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     GitHub({
       clientId: env.AUTH_GITHUB_ID,
       clientSecret: env.AUTH_GITHUB_SECRET,
+    }),
+    Google({
+      clientId: env.AUTH_GOOGLE_ID,
+      clientSecret: env.AUTH_GOOGLE_SECRET,
     }),
     Credentials({
       async authorize(credentials) {

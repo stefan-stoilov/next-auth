@@ -8,12 +8,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useUserSession } from "@/hooks";
+import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/auth/buttons";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export const UserButton = () => {
   const user = useUserSession();
+  const pathname = usePathname();
 
   return (
     <DropdownMenu>
@@ -28,7 +30,7 @@ export const UserButton = () => {
       <DropdownMenuContent className="flex w-40 flex-col gap-2 px-3 py-4" align="end">
         <DropdownMenuItem asChild>
           <Button asChild variant={"link"} className="cursor-pointer">
-            <Link href="/">Home</Link>
+            {pathname === "/" ? <Link href="settings/">Settings</Link> : <Link href="/">Home</Link>}
           </Button>
         </DropdownMenuItem>
 

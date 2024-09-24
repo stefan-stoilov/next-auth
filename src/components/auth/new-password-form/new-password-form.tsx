@@ -12,6 +12,9 @@ import { FormError, FormSuccess } from "@/components/auth/form-status";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+import { env } from "@/env";
+import { CredentialsDialog } from "@/components/auth/credentials-dialog";
+
 export function NewPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -25,6 +28,7 @@ export function NewPasswordForm() {
     status: "awaiting",
     message: "",
   });
+  const [openDialog, setOpenDialog] = useState(false);
 
   const form = useForm<NewPasswordSchemaType>({
     resolver: zodResolver(newPasswordSchema),
@@ -37,6 +41,11 @@ export function NewPasswordForm() {
 
   function onSubmit(data: NewPasswordSchemaType) {
     startTransition(async () => {
+      if (env.NEXT_PUBLIC_IS_DEMO && window.location.hostname !== "localhost") {
+        setOpenDialog(true);
+        return;
+      }
+
       try {
         const res = await newPassword(data, token);
         if (res?.error) {
@@ -58,34 +67,37 @@ export function NewPasswordForm() {
   }
 
   return (
-    <CardWrapper headerLabel="Enter a new password" backButtonLabel="Back to sign in" backButtonHref="/sign-in">
-      <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
-            <FormField
-              control={control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>New Password</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={isPending} type="password" placeholder="******" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+    <>
+      <CardWrapper headerLabel="Enter a new password" backButtonLabel="Back to sign in" backButtonHref="/sign-in">
+        <Form {...form}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4">
+              <FormField
+                control={control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>New Password</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isPending} type="password" placeholder="******" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          {validation.status === "error" && <FormError message={validation.message} />}
-          {validation.status === "success" && <FormSuccess message={validation.message} />}
+            {validation.status === "error" && <FormError message={validation.message} />}
+            {validation.status === "success" && <FormSuccess message={validation.message} />}
 
-          <Button disabled={isPending} type="submit" className="w-full">
-            Reset Password
-          </Button>
-        </form>
-      </Form>
-    </CardWrapper>
+            <Button disabled={isPending} type="submit" className="w-full">
+              Reset Password
+            </Button>
+          </form>
+        </Form>
+      </CardWrapper>
+      <CredentialsDialog openDialog={openDialog} setOpenDialog={setOpenDialog} />
+    </>
   );
 }
 

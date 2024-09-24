@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
 
 function Page() {
   const user = useUserSession();
@@ -49,6 +50,7 @@ function Page() {
             status: "error",
             message: res.error,
           });
+          toast.error(res.error);
         }
 
         if (res.success) {
@@ -57,6 +59,7 @@ function Page() {
             status: "success",
             message: res.success,
           });
+          toast.success("Settings updated successfully.");
         }
       } catch (error) {
         setValidation({ status: "error", message: "An error occurred. Please try again later." });

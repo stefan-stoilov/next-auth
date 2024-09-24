@@ -12,7 +12,7 @@ export function Social() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
-  function onProviderSignIn(provider: "github") {
+  function onProviderSignIn(provider: "github" | "google") {
     startTransition(async () => {
       await signIn(provider, { callbackUrl: callbackUrl ?? DEFAULT_LOGIN_REDIRECT });
     });
@@ -20,7 +20,16 @@ export function Social() {
 
   return (
     <div className="flex w-full items-center gap-x-2">
-      <Button size="lg" className="w-full" variant="outline" disabled>
+      <Button
+        onClick={e => {
+          e.preventDefault();
+          onProviderSignIn("google");
+        }}
+        size="lg"
+        className="w-full"
+        variant="outline"
+        disabled={isPending}
+      >
         <FcGoogle className="h-5 w-5" />
       </Button>
       <Button

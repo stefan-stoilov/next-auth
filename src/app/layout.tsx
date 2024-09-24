@@ -6,6 +6,7 @@ import { siteConfig } from "@/config/site";
 
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang="en" className={inter.className}>
       <body>
         <SessionProvider session={session}>{children}</SessionProvider>
+        <Toaster />
       </body>
     </html>
   );
