@@ -11,8 +11,8 @@ export function UserNavbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex w-full max-w-[600px] items-center justify-between gap-20 rounded-xl bg-card p-4 shadow-sm">
-      <div className="flex gap-x-2">
+    <nav className="flex w-full max-w-[600px] flex-wrap-reverse items-center justify-between gap-4 rounded-xl bg-card p-4 shadow-sm md:gap-20">
+      <div className="flex flex-wrap gap-2">
         <ComponentType />
         <Button asChild variant={pathname === "/admin" ? "secondary" : "outline"}>
           <Link href="/admin">Admin</Link>

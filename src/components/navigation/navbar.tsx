@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { SignOutButton } from "@/components/auth/buttons";
 import { Button } from "@/components/ui/button";
+import { UserButton } from "@/components/auth/buttons";
 import Link from "next/link";
 
 export async function Navbar() {
@@ -14,10 +15,7 @@ export async function Navbar() {
         Next Auth App
       </Link>
       {session?.user ? (
-        <div className="flex h-full items-center gap-4">
-          <p className="text-foreground">{session?.user && <span>Welcome back {session.user.name}</span>}</p>
-          <SignOutButton />
-        </div>
+        <UserButton />
       ) : (
         <Button asChild>
           <Link href="/sign-in">Sign In</Link>
