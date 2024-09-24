@@ -25,7 +25,12 @@ export function CredentialsDialog({ openDialog, setOpenDialog }: CredentialsDial
         </DialogDescription>
 
         <DialogDescription>
-          You can still use a <b>socials</b> authentication via GitHub or Google account on this deployment.
+          Click{" "}
+          <Link href="https://github.com/stefan-stoilov/next-auth" target="_blank" className="font-bold underline">
+            here
+          </Link>{" "}
+          to get started with this project locally. You can still use a <b>socials</b> authentication via GitHub or
+          Google account on this deployment.
         </DialogDescription>
 
         <DialogDescription>
